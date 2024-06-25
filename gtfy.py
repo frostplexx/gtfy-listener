@@ -3,6 +3,8 @@ import websocket
 import json
 import os
 import requests
+import ssl
+import base64
 
 load_dotenv()
 
@@ -18,7 +20,7 @@ def on_message(ws, message):
     querystring = {"title": msg['title'], "message": msg['message']}
     headers = {
         "Priority": "default",
-        "Authorization": "Basic " + base64(ntfy_username + ":" + ntfy_password),
+        "Authorization": "Basic " + base64.b64encode((ntfy_username + ":" + ntfy_password).encode()).decode(),
 
     }
     response = requests.request(
@@ -39,9 +41,13 @@ def on_open(ws):
 
 
 if __name__ == "__main__":
+    ssl_context = ssl.create_default_context()
+    ssl_context.check_hostname = False
+    ssl_context.verify_mode = ssl.CERT_NONE
     wsapp = websocket.WebSocketApp("wss://" + str(gotify_host) + "/stream", header={"X-Gotify-Key": str(gotify_token)},
                                    on_open=on_open,
                                    on_message=on_message,
                                    on_error=on_error,
                                    on_close=on_close)
-    wsapp.run_forever()
+
+    wsapp.run_forever(sslopt={"cert_reqs": ssl.CERT_NONE})
