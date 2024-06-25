@@ -9,6 +9,8 @@ load_dotenv()
 ntfy_host = os.environ["NTFY_HOST"]
 gotify_host = os.environ['GOTIFY_HOST']
 gotify_token = os.environ['GOTIFY_TOKEN']
+ntfy_username = os.environ['NTFY_USERNAME']
+ntfy_password = os.environ['NTFY_PASSWORD']
 
 
 def on_message(ws, message):
@@ -16,6 +18,8 @@ def on_message(ws, message):
     querystring = {"title": msg['title'], "message": msg['message']}
     headers = {
         "Priority": "default",
+        "Authorization": "Basic " + base64(ntfy_username + ":" + ntfy_password),
+
     }
     response = requests.request(
         "POST", ntfy_host, headers=headers, params=querystring)

@@ -5,5 +5,7 @@ RUN pip3 install requests python-dotenv websocket-client
 ENV GOTIFY_HOST=push.example.com
 ENV GOTIFY_TOKEN=XXXXXXXXXXXX
 ENV NTFY_HOST=https://ntfy.sh/gotify
+ENV NTFY_USERNAME=
+ENV NTFY_PASSWORD=
 COPY gtfy.py /usr/bin
 CMD ["python3", "/usr/bin/gtfy.py"]
