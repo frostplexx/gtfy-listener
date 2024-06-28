@@ -7,5 +7,6 @@ ENV GOTIFY_TOKEN=
 ENV NTFY_HOST=
 ENV NTFY_USERNAME=
 ENV NTFY_PASSWORD=
+ENV INGORE_SSL=false
 COPY gtfy.py /usr/bin
 CMD ["python3", "/usr/bin/gtfy.py"]

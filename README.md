@@ -1,6 +1,6 @@
 # GTFY 🚀
 
-[![docker-image](https://github.com/sanwebinfo/gtfy-listener/actions/workflows/docker.yml/badge.svg)](https://github.com/sanwebinfo/gtfy-listener/actions/workflows/docker.yml)  
+[![docker-image](https://github.com/sanwebinfo/gtfy-listener/actions/workflows/docker.yml/badge.svg)](https://github.com/sanwebinfo/gtfy-listener/actions/workflows/docker.yml)
 
 Gotify to `Ntfy.sh` forwarder
 
@@ -8,35 +8,38 @@ Forward Gotify Push Messages 🚀 to `Ntfy.sh` Push server by using websocket �
 
 using Gotify stream to Listen the Gotify Push Notifications via websocket Connection and Froward it to Ntfy Push server.
 
-## Setup
+# Setup
+
+## Local
 
 ```sh
-git clone https://github.com/sanwebinfo/gtfy-listener
+git clone https://github.com/frostplexx/gtfy-listener
 cd gtfy-listener
 
-## local test
 ## install packages
 pip install -r requirements.txt
-touch .env
 ```
 
-- Env File `.env`
+- Rename example.env to .env and fill in the information
 
 ```sh
-NTFY = "<NTFY Push server URL>"
-GOTIFY_HOST = "<Python Cricket score API>"
-GOTIFY_TOKEN = "<GOTIFY CLIENT TOKEN>"
+GOTIFY_HOST=push.example.com
+GOTIFY_TOKEN=XXXXXXXXXXXX
+NTFY_HOST=https://ntfy.sh/gotify
+NTFY_USERNAME=user
+NTFY_PASSWORD=supersecurepassword
+INGORE_SSL=false
 
-## test
+## run
 python3 gtfy.py
 
 ```
 
 ## Docker 🐬
 
-Keep Running the Python Script in Docker  
+Keep Running the Python Script in Docker
 
-- Update the `.dockerfile` before build - Replace example `ENV` with yours  
+- Update the `.dockerfile` before build - Replace example `ENV` with yours
 
 ```sh
 FROM python:3.8.10
@@ -46,9 +49,14 @@ RUN pip3 install requests python-dotenv websocket-client
 ENV GOTIFY_HOST=push.example.com
 ENV GOTIFY_TOKEN=XXXXXXXXXXXX
 ENV NTFY_HOST=https://ntfy.sh/gotify
+ENV NTFY_USERNAME=user
+ENV NTFY_PASSWORD=supersecurepassword
+ENV INGORE_SSL=false
 COPY gtfy.py /usr/bin
 CMD ["python3", "/usr/bin/gtfy.py"]
 ```
+
+If you're not using user authentication, keep username and password empty.
 
 ```sh
 
@@ -81,10 +89,10 @@ docker rm $(docker ps -all -q)
 docker rmi $(docker image ls -q)
 ```
 
-## Inspiration
+# Inspiration
 
 Pushtify (Gotify to Pushover forwarder) - <https://github.com/sebw/pushtify>
 
-## LICENSE
+# LICENSE
 
 MIT

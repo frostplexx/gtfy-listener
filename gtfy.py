@@ -13,6 +13,7 @@ gotify_host = os.environ['GOTIFY_HOST']
 gotify_token = os.environ['GOTIFY_TOKEN']
 ntfy_username = os.environ['NTFY_USERNAME']
 ntfy_password = os.environ['NTFY_PASSWORD']
+ignore_ssl = os.environ['IGNORE_SSL']
 
 
 def on_message(ws, message):
@@ -20,9 +21,13 @@ def on_message(ws, message):
     querystring = {"title": msg['title'], "message": msg['message']}
     headers = {
         "Priority": "default",
-        "Authorization": "Basic " + base64.b64encode((ntfy_username + ":" + ntfy_password).encode()).decode(),
-
     }
+
+    if ntfy_username and ntfy_password:
+        auth = base64.b64encode(
+            bytes(ntfy_username + ":" + ntfy_password, "utf-8")).decode("ascii")
+        headers["Authorization"] = "Basic " + auth
+
     response = requests.request(
         "POST", ntfy_host, headers=headers, params=querystring)
     print("websocket: " + message + "\n" + "Ntfy: " + response.text)
@@ -50,4 +55,7 @@ if __name__ == "__main__":
                                    on_error=on_error,
                                    on_close=on_close)
 
-    wsapp.run_forever(sslopt={"cert_reqs": ssl.CERT_NONE})
+    if ignore_ssl == "true":
+        wsapp.run_forever(sslopt={"cert_reqs": ssl.CERT_NONE})
+    else: 
+        wsapp.run_forever()
